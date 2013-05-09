@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=320; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Minimal AppLaud App</title>
+
+	  <script type="text/javascript" charset="utf-8" src="cordova-1.9.0.js"></script>
+	  <script type="text/javascript" charset="utf-8" src="jquery.mobile/jquery-1.7.2.min"></script>
+	  <script type="text/javascript" charset="utf-8">
+	  
+	  	var larg = $(window).width();
+	  	var altura = $(window).height();
+	  	var medida = 0;
+	  	var rodando = false;
+	  	var WatchID = null;
+	  	
+	  	$(document).ready(function(){
+	  		if(larg < altura){
+	  			medida = larg;
+	  		} else {
+	  			medida = altura;
+	  		}
+	  		$("#bussola").css('width', medida+"px");
+	  		$("#bussola").css('height', medida+"px");
+	  		$("#bussola").css('background-color', "red");
+	  		$("#bussola").css('position', "absolute");
+	  		$("#bussola").css('top', ((altura / 2)-(medida/2))+"px");
+	  		//$("#bussola").html("0 graus.");
+	  		$("#bussola").click(iniciar);
+	  	});
+		
+		function iniciar(){
+			if(!rodando){
+				WatchID = navigator.compass.watchHeading(function(heading){
+					$("#bussola").css('-webkit-transform', 'rotate(-'+heading.magneticHeading+'deg)');
+					//$("#bussola").html(heading.magneticHeading + " graus.");
+				}, function(erro){
+					//$("#bussola").html("Erro: "+erro.code);
+				}, { frequency: 200 });
+				rodando = true;
+			} else {
+				navigator.compass.clearWatch(WatchID);
+            	WatchID = null;
+            	$("#bussola").css('-webkit-transform', '');
+            	//$("#bussola").html("0 graus.");
+            	rodando = false;
+			}
+		}
+	</script>  
+
+  </head>
+  <body onload="" id="stage" class="theme" style="margin: 0; padding: 0;">
+    <div id="bussola" style="transition: all 0.2s ease-in-out;">
+    	<img src="imgs/seta.jpg" style="width: 100%; height: 100%;">
+    </div>
+
+  </body>
+</html>
